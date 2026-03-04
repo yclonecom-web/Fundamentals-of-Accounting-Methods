@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGBS · Fundamentals of Accounting MCQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .accent-bg { background-color: #047857; } /* emerald 700 */
+        .accent-text { color: #047857; }
+        .accent-border { border-color: #047857; }
+        .hover-accent-bg:hover { background-color: #064e3b; }
+        .card-enter { animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUpFade {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn:hover:not(:disabled) { transform: translateX(4px); background-color: #ecfdf5; border-color: #047857; }
+        .progress-ring__circle { transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(-90deg); transform-origin: 50% 50%; }
+        .toast-enter { animation: toastSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes toastSlide { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .backdrop-blur { backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full bg-white/90 backdrop-blur border-b border-slate-200 z-40">
+        <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex flex-col leading-tight">
+                <span class="text-xs font-bold tracking-widest text-slate-400 uppercase">University of Ghana</span>
+                <span class="text-lg font-bold accent-text">Fundamentals of Accounting</span>
+            </div>
+            <div id="mini-progress-container" class="hidden flex items-center gap-3">
+                <div class="text-right">
+                    <div class="text-xs text-slate-400 font-medium">Score</div>
+                    <div class="font-bold text-slate-800"><span id="live-score">0</span></div>
+                </div>
+                <div class="relative w-8 h-8">
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle class="text-slate-200 stroke-current" stroke-width="10" cx="50" cy="50" r="40" fill="transparent"></circle>
+                        <circle id="mini-progress-circle" class="accent-text stroke-current progress-ring__circle" stroke-width="10" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center justify-center p-6 pt-24 w-full max-w-3xl mx-auto z-10">
+
+        <!-- Toast -->
+        <div id="motivation-toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl z-50 hidden flex items-center gap-3">
+            <span class="text-xl">📊</span>
+            <span id="motivation-text" class="font-medium text-sm">Balancing the books!</span>
+        </div>
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="w-full card-enter text-center">
+            <div class="mb-10">
+                <div class="w-24 h-24 accent-bg rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-900/20">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h1 class="text-4xl font-bold text-slate-900 mb-3 tracking-tight">Debright's Fundamentals</h1>
+                <p class="text-slate-500 text-lg">60 MCQs · Accounting principles & practice</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm"><div class="accent-text font-bold text-xl mb-1">60</div><div class="text-xs text-slate-400 uppercase tracking-wide">Questions</div></div>
+                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm"><div class="accent-text font-bold text-xl mb-1">IFRS</div><div class="text-xs text-slate-400 uppercase tracking-wide">Concepts</div></div>
+                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm"><div class="accent-text font-bold text-xl mb-1">GAAP</div><div class="text-xs text-slate-400 uppercase tracking-wide">Framework</div></div>
+            </div>
+            <button onclick="startQuiz()" class="w-full md:w-auto px-12 py-4 accent-bg hover-accent-bg text-white font-semibold rounded-lg shadow-lg shadow-emerald-900/20 transition-all transform hover:-translate-y-1">Start Assessment</button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden w-full">
+            <div class="mb-8 flex justify-between items-end border-b border-slate-200 pb-4">
+                <div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Question</span>
+                    <span class="text-3xl font-bold text-slate-800"><span id="current-q-num">1</span><span class="text-lg text-slate-400 font-normal">/60</span></span>
+                </div>
+                <div id="topic-badge" class="px-3 py-1 bg-emerald-50 accent-text text-xs font-bold uppercase tracking-wide rounded-md">Intro</div>
+            </div>
+            <div id="question-card" class="card-enter">
+                <h2 id="question-text" class="text-2xl font-medium text-slate-800 mb-8 leading-snug">Loading...</h2>
+                <div id="options-container" class="space-y-3 mb-8"></div>
+                <div id="feedback-area" class="hidden bg-slate-50 rounded-lg p-6 border-l-4 border-slate-200">
+                    <div class="flex items-start gap-4">
+                        <div id="feedback-icon" class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1"></div>
+                        <div class="flex-grow">
+                            <h3 id="feedback-title" class="font-bold text-lg mb-1">Correct</h3>
+                            <p id="feedback-explanation" class="text-slate-600 text-sm leading-relaxed"></p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="nextQuestion()" class="accent-bg text-white px-6 py-2 rounded-md font-medium text-sm hover-accent-bg transition shadow-md">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="hidden w-full text-center card-enter">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Quiz Complete</h2>
+            <p class="text-slate-500 mb-10">Your accounting proficiency</p>
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 mb-10">
+                <div class="flex flex-col md:flex-row items-center justify-center gap-10">
+                    <div class="relative w-48 h-48">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle class="text-slate-100" stroke-width="12" stroke="currentColor" fill="transparent" r="70" cx="96" cy="96" />
+                            <circle id="final-score-circle" class="accent-text" stroke-width="12" stroke-dasharray="439.8" stroke-dashoffset="439.8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="70" cx="96" cy="96" />
+                        </svg>
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <span id="final-percentage" class="text-4xl font-bold text-slate-900 block">0%</span>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wide">Accuracy</span>
+                        </div>
+                    </div>
+                    <div class="text-left space-y-4 w-full md:w-auto">
+                        <div class="flex items-center justify-between gap-8 border-b border-slate-50 pb-2"><span class="text-sm text-slate-500">Correct</span><span id="final-correct" class="font-bold text-green-600 text-xl">0</span></div>
+                        <div class="flex items-center justify-between gap-8 border-b border-slate-50 pb-2"><span class="text-sm text-slate-500">Incorrect</span><span id="final-wrong" class="font-bold text-red-500 text-xl">0</span></div>
+                        <div class="flex items-center justify-between gap-8"><span class="text-sm text-slate-500">Total Score</span><span id="final-total" class="font-bold text-slate-900 text-xl">60</span></div>
+                    </div>
+                </div>
+            </div>
+            <div id="review-container" class="hidden text-left mb-10">
+                <h3 class="font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">Review incorrect answers</h3>
+                <div id="review-list" class="space-y-4"></div>
+            </div>
+            <div class="flex gap-4 justify-center">
+                <button onclick="toggleReview()" id="review-btn" class="hidden px-8 py-3 bg-white border border-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-50 hover:border-slate-300 transition">Review Mistakes</button>
+                <button onclick="location.reload()" class="px-8 py-3 accent-bg text-white font-medium rounded-lg hover-accent-bg transition shadow-lg shadow-emerald-900/20">Retake Quiz</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Milestone Modal -->
+    <div id="milestone-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300" id="milestone-content">
+            <div class="text-center">
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Progress check</h3>
+                <p class="text-slate-500 text-sm mb-6">You've answered <span id="milestone-count">0</span> questions.</p>
+                <div class="relative w-32 h-32 mx-auto mb-6">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle class="text-slate-100" stroke-width="8" stroke="currentColor" fill="transparent" r="58" cx="64" cy="64" />
+                        <circle id="milestone-circle" class="accent-text transition-all duration-1000 ease-out" stroke-width="8" stroke-dasharray="364" stroke-dashoffset="364" stroke-linecap="round" stroke="currentColor" fill="transparent" r="58" cx="64" cy="64" />
+                    </svg>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"><span id="milestone-percent" class="text-2xl font-bold text-slate-800">0%</span></div>
+                </div>
+                <p id="milestone-msg" class="text-sm font-medium accent-text mb-6">Keep the ledger balanced!</p>
+                <button onclick="closeMilestone()" class="w-full py-3 accent-bg text-white rounded-lg font-medium hover-accent-bg transition">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ------------------------------------------------------------
+        // 60 ACCOUNTING MCQs (sourced from DEBRIGHT'S FUND. OF ACCOUNTING)
+        // Each object: q, options[4], answer (0-based), topic, explanation
+        // ------------------------------------------------------------
+        const questions = [
+            { q: "What is the primary purpose of accounting?", options: ["Creating source documents","Summarizing expenses","Providing financial information to aid decision makers","Analyzing market trends"], answer: 2, topic: "Intro", explanation: "Accounting's core purpose is to provide financial information useful for decision making." },
+            { q: "In the definition of accounting, what does 'Financial Information' refer to?", options: ["Information about a firm's financial activities","Market research data","Personnel records","Inventory levels"], answer: 0, topic: "Intro", explanation: "Financial information specifically relates to the financial activities of an entity." },
+            { q: "What does 'An Entity' mean in accounting context?", options: ["A mythical being","A physical location","A business entity","A government agency"], answer: 2, topic: "Intro", explanation: "In accounting, an entity is any economic unit that controls resources and engages in transactions." },
+            { q: "Who are the users of financial information?", options: ["Entities with no interest","External decision makers","Accountants","Marketing professionals"], answer: 1, topic: "Users", explanation: "Users include both internal and external decision makers; external users are a primary group." },
+            { q: "Which step in the accounting process involves making adjustments after extracting the trial balance?", options: ["Collecting","Recording","Summarizing","Analyzing"], answer: 2, topic: "Process", explanation: "Adjustments are part of the summarizing step before preparing financial statements." },
+            { q: "In the accounting process, what is the purpose of 'Reporting'?", options: ["To prepare source documents","To record transactions","To provide financial data to decision makers","To present financial information in statements"], answer: 3, topic: "Process", explanation: "Reporting is the formal presentation of financial information in statements." },
+            { q: "Which of the following is NOT a subfield of accounting?", options: ["Financial Accounting","Management Accounting","Taxation","Human Resources Accounting"], answer: 3, topic: "Subfields", explanation: "Human Resources Accounting is not a traditional subfield; it is a specialised area, not core." },
+            { q: "What does Management Accounting primarily focus on?", options: ["Preparing financial statements","Internal decision making","Tax planning","Auditing external financial reports"], answer: 1, topic: "Subfields", explanation: "Management accounting serves internal users with information for planning and control." },
+            { q: "Which subfield is concerned with collection and allocation of cost of production?", options: ["Taxation","Cost Accounting","Financial Accounting","Management Accounting"], answer: 1, topic: "Subfields", explanation: "Cost accounting deals with determining and allocating costs of production or services." },
+            { q: "In accounting, what is the primary function of Taxation?", options: ["Analyzing financial statements","Managing an organization's budget","Proper accounting for incomes and expenditures of taxable entities","Preparing income statements"], answer: 2, topic: "Subfields", explanation: "Taxation focuses on accounting for taxable income and compliance with tax laws." },
+            { q: "Which subfield is responsible for giving independent assurance as to the true and fair view of financial reports?", options: ["Cost Accounting","Management Accounting","Auditing","Financial Accounting"], answer: 2, topic: "Subfields", explanation: "Auditing provides independent assurance on the fairness of financial statements." },
+            { q: "What is the primary purpose of the Statement of Financial Position (Balance Sheet)?", options: ["To summarize revenue and expenses","To show the financial position at a point in time","To report cash flows","To present changes in shareholders' equity"], answer: 1, topic: "Financial Statements", explanation: "The balance sheet shows assets, liabilities, and equity at a specific date." },
+            { q: "Which financial statement provides information on financial performance over a period?", options: ["Income Statement","Cash Flow Statement","Statement of Financial Position","Statement of Changes in Equity"], answer: 0, topic: "Financial Statements", explanation: "The income statement reports revenues and expenses, showing performance over a period." },
+            { q: "The Statement of Changes in Equity shows:", options: ["Current cash balance","Change in owners' equity over an accounting period","Inventory levels","Total liabilities"], answer: 1, topic: "Financial Statements", explanation: "It details movements in equity including profits, losses, and owner contributions." },
+            { q: "Which financial statement provides information on actual cash inflows and outflows?", options: ["Income Statement","Statement of Changes in Equity","Cash Flow Statement","Balance Sheet"], answer: 2, topic: "Financial Statements", explanation: "The cash flow statement shows actual cash movements during a period." },
+            { q: "What is the primary purpose of 'Notes to the Accounts'?", options: ["To summarize revenue and expenses","To list the assets","To provide supplemental information about financial condition","To calculate taxes owed"], answer: 2, topic: "Financial Statements", explanation: "Notes give additional detail and context to the figures in the statements." },
+            { q: "How many elements of financial statements are there under the IFRS conceptual framework?", options: ["3","4","5","6"], answer: 2, topic: "Elements", explanation: "The five elements are assets, liabilities, equity, income, and expenses." },
+            { q: "Which of the following is NOT one of the elements of financial statements?", options: ["Assets","Liabilities","Equity","Dividends"], answer: 3, topic: "Elements", explanation: "Dividends are distributions to owners, not a separate element of financial statements." },
+            { q: "What is the main activity of a manufacturing business?", options: ["Providing services","Purchasing goods from others","Changing basic inputs into goods sold to customers","Owning real estate"], answer: 2, topic: "Business Types", explanation: "Manufacturers transform raw materials into finished products." },
+            { q: "What type of business purchases goods and sells them to customers?", options: ["Service Business","Manufacturing Business","Merchandising Business","Non-Governmental Organization"], answer: 2, topic: "Business Types", explanation: "Merchandisers buy and sell goods without changing their form." },
+            { q: "A business owned by a single individual is known as:", options: ["Partnership","Company","Sole Proprietorship","Corporation"], answer: 2, topic: "Organizations", explanation: "A sole proprietorship is a one-owner business." },
+            { q: "What is one key characteristic of a Sole Proprietorship?", options: ["Ease in ownership transfer","Limited source of funds","Legal separate entity","Unlimited liabilities"], answer: 3, topic: "Organizations", explanation: "Unlimited liability means the owner is personally responsible for debts." },
+            { q: "Which business organization is regulated by the Private Incorporated Partnership Act (Act 152) of 1962?", options: ["Sole Proprietorship","Partnership","Company","Corporation"], answer: 1, topic: "Organizations", explanation: "That act specifically governs partnerships in Ghana." },
+            { q: "What is one key characteristic of a Partnership?", options: ["Legal separate entity","Delayed decision making","Limited liabilities","Severally and jointly liable"], answer: 3, topic: "Organizations", explanation: "Partners are jointly and severally liable for partnership debts." },
+            { q: "Which of the following is NOT a characteristic of Companies?", options: ["Legal separate entity","Wide access to raising funds","Delayed decision making","Limited liabilities"], answer: 2, topic: "Organizations", explanation: "Companies generally have efficient decision-making structures; delayed decisions are not a defining characteristic." },
+            { q: "Why do Sole Proprietorships need accounting information?", options: ["For tax collecting purposes","To create legal contracts","For advertising purposes","To improve product quality"], answer: 0, topic: "Users", explanation: "Sole proprietors need accounting mainly for tax compliance and financial management." },
+            { q: "What is the primary purpose of accounting information in a Partnership?", options: ["Assess future profitability and risk","Evaluate staying power of suppliers","Provide remuneration to employees","Determine profit sharing among partners"], answer: 3, topic: "Users", explanation: "Partners need accounting to allocate profits according to their agreement." },
+            { q: "Why do Companies need accounting information?", options: ["To assess future profitability and risk","To evaluate staying power of suppliers","To improve decision-making speed","To create source documents"], answer: 0, topic: "Users", explanation: "Companies use accounting to evaluate performance and financial health." },
+            { q: "Who are considered external users of accounting information?", options: ["Employees","Managers","Customers","Shareholders"], answer: 3, topic: "Users", explanation: "Shareholders are external to the management of the company." },
+            { q: "How can financial statements be classified based on purpose?", options: ["General-purpose and specific-purpose","Income statements and balance sheets","Current assets and non-current assets","Equity and liabilities"], answer: 0, topic: "Financial Statements", explanation: "They are either general-purpose (for external users) or specific-purpose (for internal use)." },
+            { q: "Which elements make up the building blocks of financial statements?", options: ["Assets, liabilities, and equity","Revenues and expenses","Owners' contributions and withdrawals","Inflows and outflows"], answer: 0, topic: "Elements", explanation: "Assets, liabilities, and equity are the fundamental building blocks (statement of financial position)." },
+            { q: "What does 'recognition' mean in financial statements?", options: ["Documenting all transactions","Including items that meet definition and criteria in statements","Calculating monetary values","Preparing tax returns"], answer: 1, topic: "Recognition", explanation: "Recognition is the process of incorporating an item that meets the definition and recognition criteria." },
+            { q: "What are the fundamental recognition criteria for elements?", options: ["Definition, measurability, relevance, reliability","Completeness, accuracy, consistency, verifiability","Frequency, materiality, neutrality, legality","Clarity, simplicity, materiality, feasibility"], answer: 0, topic: "Recognition", explanation: "The four criteria are definition, measurability, relevance, and reliability." },
+            { q: "In recognition criteria, what does 'definition' refer to?", options: ["Dictionary definition","Whether item meets basic criteria of a financial element","Exact wording in statements","How item is measured"], answer: 1, topic: "Recognition", explanation: "Definition means the item must qualify as an asset, liability, equity, income, or expense." },
+            { q: "What is 'measurability' concerned with?", options: ["Difficulty of measuring","Relevance","Whether item is recorded in a monetary unit","Historical context"], answer: 2, topic: "Recognition", explanation: "Measurability means the item has a cost or value that can be measured in monetary terms." },
+            { q: "Which of the following is NOT a fundamental recognition criterion?", options: ["Relevance","Completeness","Reliability","Neutrality"], answer: 1, topic: "Recognition", explanation: "Completeness is a qualitative characteristic, not a recognition criterion." },
+            { q: "What does 'measurement' mean in financial statements?", options: ["Creating statements","Counting physical assets","Putting monetary value on an element","Verifying data"], answer: 2, topic: "Measurement", explanation: "Measurement is the process of determining the monetary amount at which an element is recognised." },
+            { q: "What are the four bases of measurement for elements?", options: ["Original cost, replacement value, settlement value, future value","Historical cost, future value, present value, net realizable value","Retail price, market price, fair value, adjusted value","Liquidation value, income value, equity value, depreciation value"], answer: 1, topic: "Measurement", explanation: "Common measurement bases include historical cost, current cost, realizable value, and present value." },
+            { q: "When assets are valued based on cost incurred in earning revenues, this is called:", options: ["Historical cost","Replacement value","Net realizable value","Present value"], answer: 0, topic: "Measurement", explanation: "Historical cost is the original amount paid for the asset." },
+            { q: "Which elements are directly related to a company's performance (income statement)?", options: ["Assets and liabilities","Equity and expenses","Revenues and expenses","Equity and liabilities"], answer: 2, topic: "Elements", explanation: "Revenues and expenses represent performance over a period." },
+            { q: "What are revenues primarily associated with?", options: ["Inflows of economic benefits from operations that increase equity","Outflows that decrease equity","Costs incurred in earning revenues","Investments in other companies"], answer: 0, topic: "Elements", explanation: "Revenues are increases in economic benefits during the period." },
+            { q: "What is an example of 'Main Revenue' for a trading company?", options: ["Interest on investments","Discount received","Profit on disposal","Sales"], answer: 3, topic: "Elements", explanation: "Sales revenue is the primary revenue from ordinary activities." },
+            { q: "In financial statements, what are expenses primarily associated with?", options: ["Inflows of economic benefits","Outflows of economic benefits","Equity contributions","Liabilities"], answer: 1, topic: "Elements", explanation: "Expenses are outflows or depletions of assets or incurrences of liabilities." },
+            { q: "What is the main expense directly related to a company's sales?", options: ["Cost of sales","Operating expenses","Cost of goods sold","Gross profit"], answer: 0, topic: "Income Statement", explanation: "Cost of sales (or cost of goods sold) is the direct cost attributable to sales." },
+            { q: "What are non-current assets?", options: ["Assets settled within a year","Assets acquired for resale","Assets from which future benefits expected in more than a year","Assets with no value"], answer: 2, topic: "Classification", explanation: "Non-current assets are long-term resources used in the business." },
+            { q: "Which classification refers to liabilities required to be settled within a year?", options: ["Non-current liabilities","Current liabilities","Equity","Assets"], answer: 1, topic: "Classification", explanation: "Current liabilities are obligations due within one year." },
+            { q: "What is the residual interest in the firm's assets after paying all liabilities called?", options: ["Liabilities","Equity or net assets","Expenses","Revenues"], answer: 1, topic: "Elements", explanation: "Equity is the residual claim on assets after deducting liabilities." },
+            { q: "Which equation shows the relationship between a firm's assets and the claims over the assets?", options: ["Assets = Liabilities","Assets = Revenues - Expenses","Assets = Liabilities + Equity","Assets = Equity - Liabilities"], answer: 2, topic: "Equation", explanation: "The accounting equation is Assets = Liabilities + Equity." },
+            { q: "What is a business transaction in financial accounting?", options: ["An economic event affecting financial position, reliably measured","A legal proceeding","A board meeting","A purchase order"], answer: 0, topic: "Transactions", explanation: "A business transaction is an event that changes financial position and can be measured." },
+            { q: "In the accounting equation, what is the effect of an increase in assets?", options: ["It increases equity","It decreases liabilities","It decreases equity","It has no effect"], answer: 0, topic: "Equation", explanation: "An increase in assets, without a change in liabilities, increases equity (e.g., revenue)." },
+            { q: "If liabilities increase, what is the effect on equity (all else equal)?", options: ["Increases equity","Decreases equity","No effect","Depends on the transaction"], answer: 3, topic: "Equation", explanation: "If assets also increase, equity unchanged; if assets decrease, equity decreases. It depends." },
+            { q: "If a transaction results in a decrease in equity, what could have caused it?", options: ["Increase in assets","Increase in expenses","Increase in liabilities","Increase in revenues"], answer: 1, topic: "Equation", explanation: "Expenses decrease equity." },
+            { q: "When assets decrease, what is a corresponding effect?", options: ["Liabilities increase","Liabilities decrease","Equity increases","Equity decreases"], answer: 3, topic: "Equation", explanation: "If assets decrease without a liability change, equity decreases (e.g., expense)." },
+            { q: "Which is a component of the accounting equation?", options: ["Revenues","Liabilities","Expenses","Dividends"], answer: 1, topic: "Equation", explanation: "Liabilities are part of the equation: Assets = Liabilities + Equity." },
+            { q: "What is the Conceptual Framework primarily designed to provide?", options: ["Detailed templates","Consistent set of rules and standards","Business operations framework","Marketing strategies"], answer: 1, topic: "Framework", explanation: "The Conceptual Framework underpins consistent accounting standards." },
+            { q: "The Conceptual Framework serves as the basis for:", options: ["Tax forms","Legal disputes in accounting","Deciding on business names","Setting employee salaries"], answer: 1, topic: "Framework", explanation: "It guides standard-setters and helps resolve accounting disputes." },
+            { q: "Which term describes the Conceptual Framework in accounting?", options: ["Financial Statements","Accounting Regulations","GAAP","Theoretical Foundation"], answer: 3, topic: "Framework", explanation: "It is a theoretical foundation that guides standard setting." },
+            { q: "The users of accounting information are primarily:", options: ["Accountants","Decision makers who use financial information","Government agencies","Software developers"], answer: 1, topic: "Users", explanation: "Users are decision makers (investors, creditors, managers) who rely on accounting information." },
+            { q: "What does the 'Measurement' element in the IASB's Framework focus on?", options: ["Creating source documents","How financial statements should be recognized","How to calculate taxes","Determination of when and how to measure items"], answer: 3, topic: "Measurement", explanation: "Measurement deals with assigning monetary amounts to elements." },
+            { q: "What are the fundamental components of financial statements according to the IASB's Framework?", options: ["Liabilities and equity","Income and expenses","Credits and debits","Assets and liabilities"], answer: 3, topic: "Elements", explanation: "Assets and liabilities are the fundamental building blocks from which others derive." }
+        ];
+
+        // Motivational messages (accounting flavour)
+        const encouragements = [
+            "Your books are balanced! 📚", "Audit approved! ✅", "Depreciation never looked so good! 📉",
+            "Matching principle on point! 🔗", "Going concern? Going strong! 🚀", "Faithful representation! 🎯",
+            "Accrual brilliance! 💡", "Materiality? You're material! 🔍", "Consistency is key! 🔑", "Prudence pays off! 🛡️"
+        ];
+
+        // --- STATE ---
+        let currentQuestionIndex = 0, score = 0, wrongAnswers = [];
+        const totalQuestions = questions.length;
+
+        // DOM elements
+        const startScreen = document.getElementById('start-screen'), quizScreen = document.getElementById('quiz-screen'), resultScreen = document.getElementById('result-screen');
+        const questionText = document.getElementById('question-text'), optionsContainer = document.getElementById('options-container');
+        const feedbackArea = document.getElementById('feedback-area'), feedbackTitle = document.getElementById('feedback-title');
+        const feedbackExplanation = document.getElementById('feedback-explanation'), feedbackIcon = document.getElementById('feedback-icon');
+        const topicBadge = document.getElementById('topic-badge'), currentQNum = document.getElementById('current-q-num');
+        const liveScore = document.getElementById('live-score'), miniProgressContainer = document.getElementById('mini-progress-container');
+        const miniProgressCircle = document.getElementById('mini-progress-circle');
+        const milestoneModal = document.getElementById('milestone-modal'), milestoneContent = document.getElementById('milestone-content');
+        const milestoneCount = document.getElementById('milestone-count'), milestonePercent = document.getElementById('milestone-percent');
+        const milestoneCircle = document.getElementById('milestone-circle'), motivationToast = document.getElementById('motivation-toast');
+        const motivationText = document.getElementById('motivation-text');
+
+        function startQuiz() { startScreen.classList.add('hidden'); quizScreen.classList.remove('hidden'); miniProgressContainer.classList.remove('hidden'); loadQuestion(); }
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            feedbackArea.classList.add('hidden'); optionsContainer.innerHTML = '';
+            questionText.textContent = q.q; currentQNum.textContent = currentQuestionIndex + 1; topicBadge.textContent = q.topic;
+            const progressPercent = (currentQuestionIndex / totalQuestions) * 100;
+            miniProgressCircle.style.strokeDashoffset = 251.2 - (251.2 * progressPercent / 100);
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full text-left p-5 rounded-xl border-2 border-emerald-200 bg-white text-slate-700 font-medium text-lg';
+                btn.textContent = opt; btn.onclick = () => checkAnswer(i, btn); optionsContainer.appendChild(btn);
+            });
+        }
+        function checkAnswer(selected, btn) {
+            const q = questions[currentQuestionIndex]; const buttons = optionsContainer.getElementsByTagName('button');
+            for (let b of buttons) { b.disabled = true; b.classList.add('opacity-60', 'cursor-not-allowed'); }
+            const isCorrect = selected === q.answer;
+            feedbackArea.classList.remove('hidden','border-red-200','border-green-200');
+            feedbackIcon.classList.remove('bg-red-100','text-red-600','bg-green-100','text-green-600');
+            feedbackTitle.classList.remove('text-red-700','text-green-700');
+            if (isCorrect) {
+                btn.classList.remove('border-emerald-200','bg-white'); btn.classList.add('border-green-500','bg-green-50','text-green-900','font-bold');
+                feedbackArea.classList.add('border-green-200'); feedbackIcon.classList.add('bg-green-100','text-green-600');
+                feedbackIcon.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                feedbackTitle.textContent = 'Correct entry'; feedbackTitle.classList.add('text-green-700'); score++; liveScore.textContent = score;
+            } else {
+                btn.classList.remove('border-emerald-200','bg-white'); btn.classList.add('border-red-500','bg-red-50','text-red-900');
+                const correctBtn = buttons[q.answer]; correctBtn.classList.remove('border-emerald-200','bg-white'); correctBtn.classList.add('border-green-500','bg-green-50','text-green-900','font-bold');
+                feedbackArea.classList.add('border-red-200'); feedbackIcon.classList.add('bg-red-100','text-red-600');
+                feedbackIcon.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                feedbackTitle.textContent = 'Incorrect posting'; feedbackTitle.classList.add('text-red-700');
+                wrongAnswers.push({ q: q.q, userAns: q.options[selected], correctAns: q.options[q.answer], explanation: q.explanation });
+            }
+            feedbackExplanation.textContent = q.explanation; feedbackArea.classList.add('card-enter');
+        }
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex % 10 === 0 && currentQuestionIndex < totalQuestions) { showMilestone(); return; }
+            if (currentQuestionIndex % 3 === 0) showMotivation();
+            if (currentQuestionIndex < totalQuestions) loadQuestion(); else showResults();
+        }
+        function showMotivation() {
+            motivationText.textContent = encouragements[Math.floor(Math.random() * encouragements.length)];
+            motivationToast.classList.remove('hidden'); motivationToast.classList.add('toast-enter');
+            setTimeout(() => motivationToast.classList.add('hidden'), 2800);
+        }
+        function showMilestone() {
+            quizScreen.classList.add('blur-sm'); milestoneModal.classList.remove('hidden');
+            setTimeout(() => { milestoneModal.classList.remove('opacity-0'); milestoneContent.classList.remove('scale-95'); milestoneContent.classList.add('scale-100'); }, 10);
+            const percent = Math.round((score / currentQuestionIndex) * 100);
+            milestoneCount.textContent = currentQuestionIndex; milestonePercent.textContent = percent + '%';
+            setTimeout(() => { milestoneCircle.style.strokeDashoffset = 364 - (364 * percent / 100); }, 300);
+        }
+        function closeMilestone() { milestoneModal.classList.add('opacity-0'); setTimeout(() => { milestoneModal.classList.add('hidden'); quizScreen.classList.remove('blur-sm'); loadQuestion(); }, 300); }
+        function showResults() {
+            quizScreen.classList.add('hidden'); miniProgressContainer.classList.add('hidden'); resultScreen.classList.remove('hidden');
+            const perc = Math.round((score / totalQuestions) * 100); const circle = document.getElementById('final-score-circle');
+            setTimeout(() => { circle.style.transition = 'stroke-dashoffset 1.5s ease-out'; circle.style.strokeDashoffset = 439.8 - (439.8 * perc / 100); }, 500);
+            document.getElementById('final-percentage').textContent = perc + '%'; document.getElementById('final-correct').textContent = score;
+            document.getElementById('final-wrong').textContent = wrongAnswers.length; document.getElementById('final-total').textContent = score + ' pts';
+            const reviewBtn = document.getElementById('review-btn'), reviewList = document.getElementById('review-list'); reviewList.innerHTML = '';
+            if (wrongAnswers.length) { reviewBtn.classList.remove('hidden'); wrongAnswers.forEach((item,i) => { reviewList.innerHTML += `<div class="bg-white p-4 rounded-lg border border-emerald-200 shadow-sm"><p class="font-bold text-slate-800 text-sm mb-2">${i+1}. ${item.q}</p><div class="flex flex-col gap-2 text-sm"><div class="flex items-center gap-2 text-red-600 bg-red-50 p-2 rounded"><span class="font-bold">✘ You:</span> ${item.userAns}</div><div class="flex items-center gap-2 text-green-700 bg-green-50 p-2 rounded"><span class="font-bold">✔ Correct:</span> ${item.correctAns}</div><div class="text-slate-500 italic mt-1 pl-2 border-l-2 border-emerald-200">💡 ${item.explanation}</div></div></div>`; }); }
+        }
+        function toggleReview() { document.getElementById('review-container').classList.toggle('hidden'); }
+        window.startQuiz = startQuiz; window.nextQuestion = nextQuestion; window.closeMilestone = closeMilestone; window.toggleReview = toggleReview;
+    </script>
+</body>
+</html>
