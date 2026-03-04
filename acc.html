@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGBS 205 Accounting Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff; /* Changed to White */
+            color: #0f172a; /* Slate 900 */
+        }
+
+        /* Deep Green Accent */
+        .accent-bg { background-color: #065f46; } /* Emerald 800 */
+        .accent-text { color: #065f46; }
+        .accent-border { border-color: #065f46; }
+        .hover-accent-bg:hover { background-color: #064e3b; } /* Emerald 900 */
+
+        /* Smooth Transitions */
+        .card-enter {
+            animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            transform: translateX(4px);
+            background-color: #d1fae5; /* Light Green tint on hover */
+            border-color: #065f46;
+        }
+
+        /* Circular Progress Animation */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Toast Animation */
+        .toast-enter {
+            animation: toastSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes toastSlide {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Modal Backdrop */
+        .backdrop-blur {
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Minimal Header -->
+    <header class="fixed top-0 w-full bg-white/90 backdrop-blur border-b border-green-100 z-40 shadow-sm">
+        <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex flex-col leading-tight">
+                <span class="text-xs font-bold tracking-widest text-slate-400 uppercase">UGBS 205</span>
+                <span class="text-lg font-bold accent-text">Fundamentals of Accounting</span>
+            </div>
+            
+            <!-- Mini Progress Pie (Top Right) -->
+            <div id="mini-progress-container" class="hidden flex items-center gap-3">
+                <div class="text-right">
+                    <div class="text-xs text-slate-400 font-medium">Score</div>
+                    <div class="font-bold text-slate-800"><span id="live-score">0</span></div>
+                </div>
+                <div class="relative w-8 h-8">
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle class="text-green-50 stroke-current" stroke-width="10" cx="50" cy="50" r="40" fill="transparent"></circle>
+                        <circle id="mini-progress-circle" class="accent-text stroke-current progress-ring__circle" stroke-width="10" stroke-linecap="round" cx="50" cy="50" r="40" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col items-center justify-center p-6 pt-24 w-full max-w-3xl mx-auto z-10">
+
+        <!-- Motivational Toast (Fixed Position) -->
+        <div id="motivation-toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl z-50 hidden flex items-center gap-3 border border-green-500">
+            <span class="text-xl">📊</span>
+            <span id="motivation-text" class="font-medium text-sm">Balancing the books perfectly!</span>
+        </div>
+
+        <!-- 1. Start Screen -->
+        <div id="start-screen" class="w-full card-enter text-center">
+            <div class="mb-10">
+                <div class="w-24 h-24 accent-bg rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-900/20">
+                    <!-- Calculator/Finance Icon -->
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-bold text-slate-900 mb-3 tracking-tight">Accounting Fundamentals</h1>
+                <p class="text-slate-500 text-lg">UGBS 205 Trial Q&A & Core Concepts</p>
+                <p class="text-green-700 text-sm mt-2 font-medium bg-green-50 inline-block px-3 py-1 rounded-full border border-green-200">Financial Accounting Masterclass</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="accent-text font-bold text-xl mb-1">50</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wide">Questions</div>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="accent-text font-bold text-xl mb-1">Double Entry</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wide">Ledgers & Trial Balance</div>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="accent-text font-bold text-xl mb-1">Adjustments</div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wide">Accruals & Depreciation</div>
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full md:w-auto px-12 py-4 accent-bg hover-accent-bg text-white font-semibold rounded-lg shadow-lg shadow-green-900/20 transition-all transform hover:-translate-y-1">
+                Open the Ledger
+            </button>
+        </div>
+
+        <!-- 2. Quiz Interface -->
+        <div id="quiz-screen" class="hidden w-full">
+            <!-- Question Header -->
+            <div class="mb-8 flex justify-between items-end border-b border-green-100 pb-4">
+                <div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Question</span>
+                    <span class="text-3xl font-bold text-slate-800"><span id="current-q-num">1</span><span class="text-lg text-slate-400 font-normal">/50</span></span>
+                </div>
+                <div id="topic-badge" class="px-3 py-1 bg-green-50 accent-text text-xs font-bold uppercase tracking-wide rounded-md border border-green-200">
+                    Topic
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="card-enter bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <h2 id="question-text" class="text-xl md:text-2xl font-medium text-slate-800 mb-8 leading-snug">
+                    Loading question...
+                </h2>
+
+                <!-- Options -->
+                <div id="options-container" class="space-y-3 mb-4">
+                    <!-- Buttons injected here -->
+                </div>
+
+                <!-- Feedback Section (Slides down) -->
+                <div id="feedback-area" class="hidden bg-slate-50 rounded-xl p-6 border-l-4 border-slate-200 mt-6">
+                    <div class="flex items-start gap-4">
+                        <div id="feedback-icon" class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1">
+                            <!-- Icon -->
+                        </div>
+                        <div class="flex-grow">
+                            <h3 id="feedback-title" class="font-bold text-lg mb-1">Correct</h3>
+                            <p id="feedback-explanation" class="text-slate-600 text-sm leading-relaxed">Explanation text...</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="nextQuestion()" class="accent-bg text-white px-6 py-2 rounded-md font-medium text-sm hover-accent-bg transition shadow-md">
+                            Next Question
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Results Screen -->
+        <div id="result-screen" class="hidden w-full text-center card-enter">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">Books Balanced</h2>
+            <p class="text-slate-500 mb-10">Here is the final audit of your accounting performance</p>
+
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 mb-10">
+                <div class="flex flex-col md:flex-row items-center justify-center gap-10">
+                    <!-- Final Score Chart -->
+                    <div class="relative w-48 h-48">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle class="text-slate-100" stroke-width="12" stroke="currentColor" fill="transparent" r="70" cx="96" cy="96" />
+                            <circle id="final-score-circle" class="accent-text" stroke-width="12" stroke-dasharray="439.8" stroke-dashoffset="439.8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="70" cx="96" cy="96" />
+                        </svg>
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <span id="final-percentage" class="text-4xl font-bold text-slate-900 block">0%</span>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wide">Final Grade</span>
+                        </div>
+                    </div>
+
+                    <div class="text-left space-y-4 w-full md:w-auto">
+                        <div class="flex items-center justify-between gap-8 border-b border-slate-100 pb-2">
+                            <span class="text-sm text-slate-500">Accurate Entries</span>
+                            <span id="final-correct" class="font-bold text-green-600 text-xl">0</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-8 border-b border-slate-100 pb-2">
+                            <span class="text-sm text-slate-500">Accounting Errors</span>
+                            <span id="final-wrong" class="font-bold text-red-500 text-xl">0</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-8">
+                            <span class="text-sm text-slate-500">Total Transactions</span>
+                            <span id="final-total" class="font-bold text-slate-900 text-xl">50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Section Toggle -->
+            <div id="review-container" class="hidden text-left mb-10">
+                <h3 class="font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">Audit Review: Incorrect Entries</h3>
+                <div id="review-list" class="space-y-4">
+                    <!-- Wrong answers injected here -->
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button onclick="toggleReview()" id="review-btn" class="hidden px-8 py-3 bg-white border border-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-50 hover:border-slate-300 transition">
+                    Review Errors
+                </button>
+                <button onclick="location.reload()" class="px-8 py-3 accent-bg text-white font-medium rounded-lg hover-accent-bg transition shadow-lg shadow-green-900/20">
+                    Retake Examination
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Milestone Modal (Every 10 questions) -->
+    <div id="milestone-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300" id="milestone-content">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-100">
+                    <svg class="w-8 h-8 accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Audit Checkpoint</h3>
+                <p class="text-slate-500 text-sm mb-6">You've successfully reconciled <span id="milestone-count">0</span> transactions.</p>
+                
+                <div class="relative w-32 h-32 mx-auto mb-6">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle class="text-slate-100" stroke-width="8" stroke="currentColor" fill="transparent" r="58" cx="64" cy="64" />
+                        <circle id="milestone-circle" class="accent-text transition-all duration-1000 ease-out" stroke-width="8" stroke-dasharray="364" stroke-dashoffset="364" stroke-linecap="round" stroke="currentColor" fill="transparent" r="58" cx="64" cy="64" />
+                    </svg>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <span id="milestone-percent" class="text-2xl font-bold text-slate-800">0%</span>
+                    </div>
+                </div>
+
+                <button onclick="closeMilestone()" class="w-full py-3 accent-bg text-white rounded-lg font-medium hover-accent-bg transition">
+                    Resume Accounting
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Questions Data ---
+        // Sourced from UGBS 205 Past Questions and Standard Financial Accounting Curriculum
+        const questions = [
+            // Extracted from document
+            {
+                q: "According to the FASB's conceptual framework, which of the following is an essential characteristic of an asset?",
+                options: ["Assets are tangible", "An asset is obtained at a cost", "An asset generates future economic benefits", "Liquid assets last in the firm beyond one accounting period"],
+                answer: 2,
+                topic: "Conceptual Framework",
+                explanation: "The core defining characteristic of an asset is its ability to generate probable future economic benefits to the entity as a result of past transactions."
+            },
+            {
+                q: "Which of the following statements is INCORRECT regarding financial statements?",
+                options: ["The statement of financial position and income statement form part of the financial statements.", "The statement of financial position illustrates the accounting equation.", "The income statement illustrates the accounting equation.", "The statement of financial position and income statement illustrate the financial position and performance."],
+                answer: 2,
+                topic: "Financial Statements",
+                explanation: "The Income Statement illustrates financial performance (Revenue - Expenses = Profit). The Statement of Financial Position (Balance Sheet) is the one that illustrates the accounting equation (Assets = Liabilities + Equity)."
+            },
+            {
+                q: "Which of the following best explains what is meant by capital expenditure?",
+                options: ["Expenditure on non-current assets, including repairs and maintenance.", "Expenditure on expensive assets.", "Expenditure relating to the issue of share capital.", "Expenditure relating to the acquisition or improvement of non-current assets."],
+                answer: 3,
+                topic: "Capital vs Revenue",
+                explanation: "Capital expenditure provides benefits lasting longer than one year. It involves the acquisition, installation, or substantial improvement of a non-current (fixed) asset. General repairs are revenue expenditure."
+            },
+            {
+                q: "A trader depreciates his vehicles at 20% per annum using the straight-line method with time proportionate depreciation in the year of acquisition. In addition to the fleet acquired in previous years for Ghc 180,000, he acquired a vehicle on 1 May 2011 for Ghc 60,000. Calculate depreciation for the year ended 31 December 2011.",
+                options: ["Ghc 44,000", "Ghc 12,000", "Ghc 36,000", "Ghc 48,000"],
+                answer: 0,
+                topic: "Depreciation",
+                explanation: "Existing fleet depreciation: 20% of Ghc 180,000 = Ghc 36,000. New vehicle depreciation: 20% of Ghc 60,000 for 8 months (May-Dec) = 12,000 * (8/12) = Ghc 8,000. Total = 36,000 + 8,000 = Ghc 44,000."
+            },
+            {
+                q: "A trade debt as at 30th June 2011 amounted to Ghc 418,400. Allowance for doubtful debts brought forward as at 1st July 2010 was Ghc 18,800. The proprietor wishes that a debt of Ghc 3,400 should be written off and the Allowance adjusted to cover 5% of debts receivables as at 30th June 2011. Calculate the expense for the year.",
+                options: ["Ghc 3,400", "Ghc 1,450", "Ghc 5,350", "Ghc 20,920"],
+                answer: 2,
+                topic: "Bad & Doubtful Debts",
+                explanation: "1) Write off debt: 418,400 - 3,400 = 415,000. Bad Debt Expense = 3,400. 2) New allowance: 5% of 415,000 = 20,750. 3) Increase in allowance: 20,750 - 18,800 = 1,950. Total P&L Expense = 3,400 + 1,950 = Ghc 5,350."
+            },
+            
+            // Fundamental Concepts & Accounting Equation
+            {
+                q: "The basic accounting equation can be expressed as:",
+                options: ["Assets + Liabilities = Equity", "Assets = Liabilities + Equity", "Equity = Assets + Liabilities", "Liabilities = Assets + Equity"],
+                answer: 1,
+                topic: "Accounting Equation",
+                explanation: "The fundamental accounting equation is Assets = Liabilities + Equity (or Capital). It shows what a business owns is funded by what it owes to outsiders and what belongs to the owners."
+            },
+            {
+                q: "Which accounting concept dictates that personal expenses of the owner must not be recorded as business expenses?",
+                options: ["Prudence Concept", "Materiality Concept", "Business Entity Concept", "Going Concern Concept"],
+                answer: 2,
+                topic: "Accounting Concepts",
+                explanation: "The Business Entity Concept states that the business and its owner(s) are two separate and distinct entities for accounting purposes."
+            },
+            {
+                q: "If Assets increase by Ghc 50,000 and Liabilities increase by Ghc 30,000, what happens to Equity?",
+                options: ["Increases by Ghc 80,000", "Decreases by Ghc 20,000", "Increases by Ghc 20,000", "Decreases by Ghc 80,000"],
+                answer: 2,
+                topic: "Accounting Equation",
+                explanation: "Since Assets = Liabilities + Equity, 50,000 = 30,000 + Equity. Therefore, Equity must have increased by 20,000."
+            },
+            {
+                q: "The 'Prudence' (or Conservatism) concept implies that an accountant should:",
+                options: ["Record revenues as soon as possible", "Anticipate no profit, but provide for all possible losses", "Ignore small immaterial errors", "Only record transactions supported by cash receipts"],
+                answer: 1,
+                topic: "Accounting Concepts",
+                explanation: "The Prudence concept dictates that accountants should not overstate assets or income and should recognize liabilities and expenses as soon as they are probable."
+            },
+            {
+                q: "Recording revenue when it is earned, regardless of when cash is received, is an application of which concept?",
+                options: ["Accrual Concept", "Cash Concept", "Consistency Concept", "Realization Concept"],
+                answer: 0,
+                topic: "Accounting Concepts",
+                explanation: "The Accrual basis of accounting recognizes economic events when they happen, rather than when the cash actually changes hands."
+            },
+
+            // Double Entry & Ledgers
+            {
+                q: "According to the rules of double entry bookkeeping, an increase in an asset is recorded by a:",
+                options: ["Credit entry", "Debit entry", "Contra entry", "Nominal entry"],
+                answer: 1,
+                topic: "Double Entry",
+                explanation: "Assets and Expenses naturally have debit balances. An increase in an asset is recorded as a debit."
+            },
+            {
+                q: "A business purchases a motor vehicle on credit from AutoMarts Ltd. The correct double entry is:",
+                options: ["Dr Motor Vehicles, Cr AutoMarts Ltd", "Dr AutoMarts Ltd, Cr Motor Vehicles", "Dr Purchases, Cr AutoMarts Ltd", "Dr AutoMarts Ltd, Cr Purchases"],
+                answer: 0,
+                topic: "Double Entry",
+                explanation: "Motor Vehicles (an asset) increases, so it's debited. The liability owed to AutoMarts Ltd (a creditor) increases, so it's credited."
+            },
+            {
+                q: "Which of the following accounts normally has a CREDIT balance?",
+                options: ["Inventory", "Accounts Receivable", "Sales Revenue", "Rent Expense"],
+                answer: 2,
+                topic: "Double Entry",
+                explanation: "Revenues, Liabilities, and Equity accounts naturally have credit balances. Sales Revenue increases equity, hence it carries a credit balance."
+            },
+            {
+                q: "A debit balance on the bank account in the ledger indicates:",
+                options: ["An overdrawn bank account (a liability)", "Cash in the bank (an asset)", "A mistake in posting", "Total cash paid out during the year"],
+                answer: 1,
+                topic: "Double Entry",
+                explanation: "A debit balance on the bank account means the business has a positive balance (cash in the bank), which is an asset. A credit balance would indicate an overdraft."
+            },
+            {
+                q: "The principal book of accounts where double entry is completed is the:",
+                options: ["Journal", "Cash Book", "Trial Balance", "Ledger"],
+                answer: 3,
+                topic: "Books of Account",
+                explanation: "The Ledger is the principal book of accounts where transactions are sorted into their respective accounts, completing the double entry process."
+            },
+
+            // Books of Prime Entry
+            {
+                q: "Credit sales of goods are first recorded in the:",
+                options: ["Sales Journal (Day Book)", "Cash Book", "General Journal", "Purchases Journal"],
+                answer: 0,
+                topic: "Books of Prime Entry",
+                explanation: "The Sales Journal (or Sales Day Book) is specifically designed to record all credit sales of inventory/stock."
+            },
+            {
+                q: "Which document serves as the source document for recording a credit purchase?",
+                options: ["Sales Invoice", "Credit Note", "Purchase Invoice received from supplier", "Debit Note"],
+                answer: 2,
+                topic: "Source Documents",
+                explanation: "A purchase invoice received from the supplier is the primary source document indicating goods were purchased on credit."
+            },
+            {
+                q: "A customer returns goods that were previously sold to them on credit. This is recorded in the:",
+                options: ["Sales Journal", "Purchases Returns Journal", "Sales Returns Journal", "General Journal"],
+                answer: 2,
+                topic: "Books of Prime Entry",
+                explanation: "Goods returned by a customer (Returns Inwards) are recorded in the Sales Returns Journal."
+            },
+            {
+                q: "The Cash Book functions as both a book of prime entry and a:",
+                options: ["Trial balance", "Ledger account", "Financial statement", "Source document"],
+                answer: 1,
+                topic: "Books of Prime Entry",
+                explanation: "The Cash Book is unique because it serves as the book of prime entry for cash/bank transactions, but it also acts as the actual cash and bank accounts in the ledger."
+            },
+            {
+                q: "Which of the following would NOT be recorded in the General Journal?",
+                options: ["Purchase of a fixed asset on credit", "Correction of an error", "Depreciation of equipment", "Payment of rent by cheque"],
+                answer: 3,
+                topic: "Books of Prime Entry",
+                explanation: "Payment of rent by cheque involves cash leaving the bank, so it is recorded directly in the Cash Book, not the General Journal."
+            },
+
+            // Trial Balance & Errors
+            {
+                q: "The primary purpose of preparing a Trial Balance is to:",
+                options: ["Calculate net profit", "Check the arithmetical accuracy of the double entry", "Prepare tax returns", "Value the assets of the business"],
+                answer: 1,
+                topic: "Trial Balance",
+                explanation: "A Trial Balance lists all debit and credit balances to verify that total debits equal total credits, proving arithmetical accuracy."
+            },
+            {
+                q: "Which of the following errors will cause the Trial Balance totals to disagree?",
+                options: ["Error of omission", "Error of commission", "Single entry error", "Error of original entry"],
+                answer: 2,
+                topic: "Errors",
+                explanation: "A single entry error (recording a debit without a corresponding credit, or vice versa) will unbalance the ledger and cause the Trial Balance to fail."
+            },
+            {
+                q: "A purchase of goods for Ghc 500 was completely omitted from the books. This is an example of an error of:",
+                options: ["Principle", "Omission", "Commission", "Original entry"],
+                answer: 1,
+                topic: "Errors",
+                explanation: "When a transaction is entirely left out of the accounting records, it is known as an error of omission."
+            },
+            {
+                q: "Purchasing a new machine for Ghc 10,000 and debiting the 'Purchases' account instead of the 'Machinery' account is an error of:",
+                options: ["Principle", "Commission", "Compensating", "Omission"],
+                answer: 0,
+                topic: "Errors",
+                explanation: "An error of principle occurs when a transaction is recorded in the wrong class of account (e.g., classifying a fixed asset purchase as a revenue expense)."
+            },
+            {
+                q: "When the trial balance does not agree, the difference is temporarily placed in a:",
+                options: ["Control Account", "Suspense Account", "Trading Account", "Profit and Loss Account"],
+                answer: 1,
+                topic: "Errors",
+                explanation: "A Suspense Account is opened to temporarily hold the difference in a trial balance until the errors are found and corrected."
+            },
+
+            // Adjustments: Accruals & Prepayments
+            {
+                q: "Rent paid in advance is considered a(n):",
+                options: ["Liability", "Expense", "Asset", "Income"],
+                answer: 2,
+                topic: "Adjustments",
+                explanation: "Prepaid expenses (like rent paid in advance) are economic resources that will provide future benefits, making them Current Assets."
+            },
+            {
+                q: "An electricity bill for December received in January of the following year should be treated in December's accounts as an:",
+                options: ["Accrued Expense (Liability)", "Prepaid Expense (Asset)", "Accrued Income (Asset)", "Unearned Revenue (Liability)"],
+                answer: 0,
+                topic: "Adjustments",
+                explanation: "The electricity was consumed in December, creating an obligation to pay. It must be recognized as an accrued expense (current liability) in December."
+            },
+            {
+                q: "How does an Accrued Expense affect the financial statements?",
+                options: ["Increases Net Profit, Increases Assets", "Decreases Net Profit, Increases Liabilities", "Increases Net Profit, Decreases Liabilities", "Decreases Net Profit, Decreases Assets"],
+                answer: 1,
+                topic: "Adjustments",
+                explanation: "Recording an accrued expense increases the total expenses for the period (decreasing net profit) and creates a current liability on the balance sheet."
+            },
+            {
+                q: "A business receives a Ghc 12,000 annual subscription in advance on 1st October. Its financial year ends on 31st December. How much revenue should be recognized for the year?",
+                options: ["Ghc 12,000", "Ghc 3,000", "Ghc 9,000", "Nil"],
+                answer: 1,
+                topic: "Adjustments",
+                explanation: "Revenue is earned over time. 3 months (Oct-Dec) have passed out of 12. Revenue = 12,000 * (3/12) = Ghc 3,000."
+            },
+
+            // Depreciation & Disposals
+            {
+                q: "Depreciation is best defined as:",
+                options: ["A fund set aside for asset replacement", "The fall in the market value of an asset", "The allocation of the depreciable amount of an asset over its useful life", "Cash saved from using an asset"],
+                answer: 2,
+                topic: "Depreciation",
+                explanation: "According to IAS 16, depreciation is the systematic allocation of the depreciable amount of an asset over its useful life. It's an allocation process, not a valuation process."
+            },
+            {
+                q: "Which depreciation method results in a higher depreciation expense in the early years of an asset's life?",
+                options: ["Straight-line method", "Reducing balance method", "Units of production method", "Revaluation method"],
+                answer: 1,
+                topic: "Depreciation",
+                explanation: "The reducing balance (or double-declining) method applies a fixed percentage to the net book value, resulting in higher charges in early years when the book value is highest."
+            },
+            {
+                q: "A machine costs Ghc 20,000 with a residual value of Ghc 2,000 and a useful life of 4 years. What is the annual depreciation using the straight-line method?",
+                options: ["Ghc 5,000", "Ghc 4,500", "Ghc 2,000", "Ghc 4,000"],
+                answer: 1,
+                topic: "Depreciation",
+                explanation: "Straight-line depreciation = (Cost - Residual Value) / Useful Life = (20,000 - 2,000) / 4 = 18,000 / 4 = Ghc 4,500."
+            },
+            {
+                q: "Accumulated Depreciation is presented in the financial statements as a:",
+                options: ["Current Liability", "Reserve in Equity", "Contra-asset account deducting from the fixed asset", "Current Asset"],
+                answer: 2,
+                topic: "Depreciation",
+                explanation: "Accumulated depreciation holds the total depreciation charged to date and is subtracted from the historical cost of the asset on the balance sheet to show the Net Book Value."
+            },
+            {
+                q: "An asset originally costing Ghc 10,000 with accumulated depreciation of Ghc 6,000 is sold for Ghc 5,000. What is the profit or loss on disposal?",
+                options: ["Profit of Ghc 1,000", "Loss of Ghc 1,000", "Profit of Ghc 5,000", "Loss of Ghc 5,000"],
+                answer: 0,
+                topic: "Disposals",
+                explanation: "Net Book Value (NBV) = Cost (10,000) - Acc. Dep. (6,000) = 4,000. Sale proceeds = 5,000. Profit = Proceeds (5,000) - NBV (4,000) = Ghc 1,000 profit."
+            },
+
+            // Bad Debts & Allowances
+            {
+                q: "A bad debt written off is recorded by:",
+                options: ["Dr Bad Debts Expense, Cr Accounts Receivable", "Dr Accounts Receivable, Cr Bad Debts Expense", "Dr Sales, Cr Accounts Receivable", "Dr Bad Debts Expense, Cr Cash"],
+                answer: 0,
+                topic: "Bad Debts",
+                explanation: "Writing off a bad debt recognizes the expense (Debit Bad Debts Expense) and reduces the amount owed by the customer (Credit Accounts Receivable)."
+            },
+            {
+                q: "An increase in the Allowance for Doubtful Debts results in:",
+                options: ["An increase in Net Profit", "A decrease in Net Profit", "An increase in Total Assets", "No effect on the Income Statement"],
+                answer: 1,
+                topic: "Bad Debts",
+                explanation: "An increase in the allowance is treated as an expense in the income statement, which subsequently decreases net profit."
+            },
+            {
+                q: "If a previously written-off bad debt is unexpectedly recovered and paid by the customer, what is the correct double entry?",
+                options: ["Dr Cash, Cr Accounts Receivable", "Dr Bad Debts Recovered (Income), Cr Cash", "Dr Cash, Cr Bad Debts Recovered (Income)", "Dr Accounts Receivable, Cr Sales"],
+                answer: 2,
+                topic: "Bad Debts",
+                explanation: "Cash is received (Debit Cash) and the recovery is treated as income/other revenue for the period (Credit Bad Debts Recovered)."
+            },
+
+            // Inventory Valuation
+            {
+                q: "According to IAS 2, inventory should be valued at:",
+                options: ["Historical Cost", "Net Realizable Value", "The higher of Cost and Net Realizable Value", "The lower of Cost and Net Realizable Value"],
+                answer: 3,
+                topic: "Inventory",
+                explanation: "Following the prudence concept, IAS 2 requires inventory to be measured at the lower of its historical cost and its Net Realizable Value (expected selling price less costs to sell)."
+            },
+            {
+                q: "During a period of rising prices, which inventory valuation method results in the highest reported net profit?",
+                options: ["LIFO (Last-In, First-Out)", "FIFO (First-In, First-Out)", "AVCO (Weighted Average Cost)", "Specific Identification"],
+                answer: 1,
+                topic: "Inventory",
+                explanation: "Under FIFO, the older, cheaper inventory is sold first, resulting in a lower Cost of Goods Sold (COGS) and a higher Net Profit."
+            },
+            {
+                q: "Cost of Goods Sold (COGS) is calculated as:",
+                options: ["Opening Inventory + Purchases + Closing Inventory", "Purchases - Closing Inventory", "Opening Inventory + Purchases - Closing Inventory", "Sales - Gross Profit"],
+                answer: 2,
+                topic: "Inventory",
+                explanation: "COGS represents the direct costs of the goods actually sold during the period. The standard formula is Opening Inventory + Purchases - Closing Inventory."
+            },
+
+            // Bank Reconciliation
+            {
+                q: "A bank reconciliation statement is prepared to:",
+                options: ["Calculate the interest charged by the bank", "Explain the difference between the Cash Book bank balance and the Bank Statement balance", "Record daily cash transactions", "Prevent fraud by cashiers"],
+                answer: 1,
+                topic: "Bank Reconciliation",
+                explanation: "Due to timing differences (unpresented cheques, uncleared deposits) and bank-initiated entries, the cash book and bank statement rarely match. The reconciliation explains this variance."
+            },
+            {
+                q: "Which of the following would NOT cause a difference between the Cash Book and Bank Statement?",
+                options: ["Unpresented cheques", "Bank charges not yet recorded in the Cash Book", "Cash sales immediately banked and cleared", "Direct debits paid by the bank"],
+                answer: 2,
+                topic: "Bank Reconciliation",
+                explanation: "If cash sales are immediately banked and cleared, they appear in both the Cash Book and Bank Statement simultaneously, causing no discrepancy."
+            },
+            {
+                q: "An unpresented cheque is a cheque that:",
+                options: ["Has been received from a customer but not yet deposited", "Has been issued by the business but not yet presented to the bank for payment", "Has bounced due to insufficient funds", "Is post-dated"],
+                answer: 1,
+                topic: "Bank Reconciliation",
+                explanation: "An unpresented cheque is one written and mailed to a supplier (and credited in the cash book), but the supplier hasn't cashed it at the bank yet."
+            },
+
+            // Financial Statements 
+            {
+                q: "Gross Profit is determined by calculating:",
+                options: ["Sales Revenue minus Total Expenses", "Sales Revenue minus Cost of Goods Sold", "Gross Margin plus Net Profit", "Total Assets minus Total Liabilities"],
+                answer: 1,
+                topic: "Financial Statements",
+                explanation: "Gross profit reflects the primary trading performance of a business, calculated strictly as Net Sales Revenue minus the Cost of Goods Sold."
+            },
+            {
+                q: "Carriage Inwards is treated in the financial statements as:",
+                options: ["An operating expense in the Profit and Loss Account", "An addition to Purchases in the Trading Account", "A deduction from Sales in the Trading Account", "A Current Asset"],
+                answer: 1,
+                topic: "Financial Statements",
+                explanation: "Carriage inwards is the transport cost to bring goods into the business. It is a direct cost of acquiring inventory and is added to Purchases when calculating Cost of Goods Sold."
+            },
+            {
+                q: "Carriage Outwards is treated in the financial statements as:",
+                options: ["An operating expense in the Profit and Loss Account", "An addition to Purchases", "A deduction from Sales", "A Current Liability"],
+                answer: 0,
+                topic: "Financial Statements",
+                explanation: "Carriage outwards is the cost of delivering goods to customers. It is a selling/distribution expense and appears in the Profit and Loss section, not the Trading account."
+            },
+            {
+                q: "Working Capital is defined as:",
+                options: ["Current Assets minus Current Liabilities", "Total Assets minus Total Liabilities", "Non-current Assets plus Current Assets", "Equity plus Long-term Liabilities"],
+                answer: 0,
+                topic: "Financial Statements",
+                explanation: "Working capital (or net current assets) measures a company's short-term financial health and liquidity. The formula is Current Assets - Current Liabilities."
+            },
+            {
+                q: "Which of the following is classified as an Intangible Asset?",
+                options: ["Accounts Receivable", "Computer Hardware", "Goodwill", "Inventory"],
+                answer: 2,
+                topic: "Financial Statements",
+                explanation: "Intangible assets are non-physical assets that provide long-term value. Goodwill, patents, trademarks, and copyrights are classic examples."
+            },
+
+            // Control Accounts
+            {
+                q: "The main purpose of a Receivables (Sales Ledger) Control Account is to:",
+                options: ["Calculate cash received from customers", "Act as a substitute for individual customer accounts", "Provide an independent check on the arithmetical accuracy of the Sales Ledger", "Calculate bad debts"],
+                answer: 2,
+                topic: "Control Accounts",
+                explanation: "A control account summarizes total transactions in the subsidiary ledger. The control account balance must match the sum of individual customer balances, verifying accuracy."
+            },
+            {
+                q: "Which of the following would be entered on the CREDIT side of a Receivables Control Account?",
+                options: ["Credit Sales", "Dishonored Cheques", "Interest charged to customers", "Cash received from customers"],
+                answer: 3,
+                topic: "Control Accounts",
+                explanation: "The Receivables Control Account is an asset account (normal debit balance). Cash received from customers reduces the amount they owe, so it is credited."
+            }
+        ];
+
+        // --- Motivational Messages ---
+        const encouragements = [
+            "Your ledgers are looking flawless! 📈",
+            "Great analysis! A true financial auditor in the making. 💼",
+            "Assets = Liabilities + Equity, and you = Success! 🎯",
+            "Excellent grasp of the matching principle! 💡",
+            "Keep it up! The trial balance is agreeing perfectly. ✅",
+            "Fantastic! Masterful accounting skills! 💰",
+            "Prudence concept applied perfectly! 🛡️",
+            "You are capitalizing on your knowledge! 📊",
+            "Solid evidence of your studying! The numbers don't lie. 🧮"
+        ];
+
+        // --- State Variables ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let wrongAnswers = [];
+        const totalQuestions = questions.length;
+
+        // --- DOM Elements ---
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackExplanation = document.getElementById('feedback-explanation');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const topicBadge = document.getElementById('topic-badge');
+        const currentQNum = document.getElementById('current-q-num');
+        const liveScore = document.getElementById('live-score');
+        const miniProgressContainer = document.getElementById('mini-progress-container');
+        const miniProgressCircle = document.getElementById('mini-progress-circle');
+
+        // Milestone Elements
+        const milestoneModal = document.getElementById('milestone-modal');
+        const milestoneContent = document.getElementById('milestone-content');
+        const milestoneCount = document.getElementById('milestone-count');
+        const milestonePercent = document.getElementById('milestone-percent');
+        const milestoneCircle = document.getElementById('milestone-circle');
+
+        // Toast Element
+        const motivationToast = document.getElementById('motivation-toast');
+        const motivationText = document.getElementById('motivation-text');
+
+        // --- Functions ---
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            miniProgressContainer.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const currentQ = questions[currentQuestionIndex];
+            
+            // Reset UI
+            feedbackArea.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Text Content
+            questionText.textContent = currentQ.q;
+            currentQNum.textContent = currentQuestionIndex + 1;
+            topicBadge.textContent = currentQ.topic;
+            
+            // Update Mini Progress Ring
+            const progressPercent = ((currentQuestionIndex) / totalQuestions) * 100;
+            const offset = 251.2 - (251.2 * progressPercent / 100);
+            miniProgressCircle.style.strokeDashoffset = offset;
+
+            // Generate Options
+            currentQ.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-white text-slate-700 font-medium text-base md:text-lg shadow-sm`;
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            const currentQ = questions[currentQuestionIndex];
+            const buttons = optionsContainer.getElementsByTagName('button');
+            
+            // Disable all buttons
+            for(let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.add('opacity-60', 'cursor-not-allowed');
+            }
+
+            const isCorrect = selectedIndex === currentQ.answer;
+
+            // Style Feedback Area
+            feedbackArea.classList.remove('hidden', 'border-red-300', 'border-green-300', 'bg-red-50', 'bg-green-50');
+            feedbackIcon.classList.remove('bg-red-100', 'text-red-600', 'bg-green-100', 'text-green-600');
+            feedbackTitle.classList.remove('text-red-800', 'text-green-800');
+
+            if (isCorrect) {
+                // Button Styling
+                btnElement.classList.remove('border-slate-200', 'bg-white', 'opacity-60');
+                btnElement.classList.add('border-green-500', 'bg-green-50', 'text-green-900', 'font-bold', 'opacity-100');
+                
+                // Feedback Styling
+                feedbackArea.classList.add('border-green-300', 'bg-green-50/50');
+                feedbackIcon.classList.add('bg-green-100', 'text-green-600');
+                feedbackIcon.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
+                feedbackTitle.textContent = "Balanced (Correct)";
+                feedbackTitle.classList.add('text-green-800');
+                
+                score++;
+                liveScore.textContent = score;
+            } else {
+                // User's Wrong Button
+                btnElement.classList.remove('border-slate-200', 'bg-white', 'opacity-60');
+                btnElement.classList.add('border-red-500', 'bg-red-50', 'text-red-900', 'opacity-100');
+                
+                // Correct Button Highlight
+                const correctBtn = buttons[currentQ.answer];
+                correctBtn.classList.remove('border-slate-200', 'bg-white', 'opacity-60');
+                correctBtn.classList.add('border-green-500', 'bg-green-50', 'text-green-900', 'font-bold', 'opacity-100');
+
+                // Feedback Styling
+                feedbackArea.classList.add('border-red-300', 'bg-red-50/50');
+                feedbackIcon.classList.add('bg-red-100', 'text-red-600');
+                feedbackIcon.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                feedbackTitle.textContent = "Discrepancy (Incorrect)";
+                feedbackTitle.classList.add('text-red-800');
+
+                // Track Wrong Answer
+                wrongAnswers.push({
+                    q: currentQ.q,
+                    userAns: currentQ.options[selectedIndex],
+                    correctAns: currentQ.options[currentQ.answer],
+                    explanation: currentQ.explanation
+                });
+            }
+
+            feedbackExplanation.textContent = currentQ.explanation;
+            
+            // Slide down animation
+            feedbackArea.classList.add('card-enter');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            // Check for Milestone (Every 10 questions)
+            if (currentQuestionIndex > 0 && currentQuestionIndex % 10 === 0 && currentQuestionIndex < totalQuestions) {
+                showMilestone();
+                return;
+            }
+
+            // Check for Motivation (Every 4 questions to prevent spamming)
+            if (currentQuestionIndex > 0 && currentQuestionIndex % 4 === 0) {
+                showMotivation();
+            }
+
+            if (currentQuestionIndex < totalQuestions) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showMotivation() {
+            const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
+            motivationText.textContent = msg;
+            motivationToast.classList.remove('hidden');
+            motivationToast.classList.add('toast-enter');
+            
+            setTimeout(() => {
+                motivationToast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function showMilestone() {
+            quizScreen.classList.add('blur-sm');
+            milestoneModal.classList.remove('hidden');
+            // Trigger Fade In
+            setTimeout(() => {
+                milestoneModal.classList.remove('opacity-0');
+                document.getElementById('milestone-content').classList.remove('scale-95');
+                document.getElementById('milestone-content').classList.add('scale-100');
+            }, 10);
+
+            // Update Data
+            const percent = Math.round((score / currentQuestionIndex) * 100);
+            milestoneCount.textContent = currentQuestionIndex;
+            milestonePercent.textContent = `${percent}%`;
+
+            // Animate Circle
+            // Radius 58 => Circumference ~364
+            const offset = 364 - (364 * percent / 100);
+            setTimeout(() => {
+                milestoneCircle.style.strokeDashoffset = offset;
+            }, 300);
+        }
+
+        function closeMilestone() {
+            milestoneModal.classList.add('opacity-0');
+            setTimeout(() => {
+                milestoneModal.classList.add('hidden');
+                quizScreen.classList.remove('blur-sm');
+                loadQuestion();
+            }, 300);
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            miniProgressContainer.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            const percentage = Math.round((score / totalQuestions) * 100);
+            
+            // Animate Final Score Circle
+            // Radius 70 => Circumference ~439.8
+            const circle = document.getElementById('final-score-circle');
+            const offset = 439.8 - (439.8 * percentage / 100);
+            
+            setTimeout(() => {
+                circle.style.transition = 'stroke-dashoffset 1.5s ease-out';
+                circle.style.strokeDashoffset = offset;
+            }, 500);
+
+            document.getElementById('final-percentage').textContent = `${percentage}%`;
+            document.getElementById('final-correct').textContent = score;
+            document.getElementById('final-wrong').textContent = wrongAnswers.length;
+            document.getElementById('final-total').textContent = `${totalQuestions}`;
+
+            // Populate Review Section if there are errors
+            const reviewBtn = document.getElementById('review-btn');
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
+
+            if (wrongAnswers.length > 0) {
+                reviewBtn.classList.remove('hidden');
+                wrongAnswers.forEach((item, i) => {
+                    const div = document.createElement('div');
+                    div.className = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm";
+                    div.innerHTML = `
+                        <p class="font-bold text-slate-800 text-sm md:text-base mb-3">${i+1}. ${item.q}</p>
+                        <div class="flex flex-col gap-3 text-sm">
+                            <div class="flex items-start gap-2 text-red-700 bg-red-50 p-3 rounded-lg border border-red-100">
+                                <span class="font-bold whitespace-nowrap">✘ Your Entry:</span> 
+                                <span>${item.userAns}</span>
+                            </div>
+                            <div class="flex items-start gap-2 text-green-800 bg-green-50 p-3 rounded-lg border border-green-100">
+                                <span class="font-bold whitespace-nowrap">✔ Correct Entry:</span> 
+                                <span>${item.correctAns}</span>
+                            </div>
+                            <div class="text-slate-600 mt-2 pl-3 border-l-4 border-green-300 bg-slate-50 p-3 rounded-r-lg text-sm leading-relaxed shadow-inner">
+                                <span class="font-semibold text-green-800 block mb-1">Explanation:</span> ${item.explanation}
+                            </div>
+                        </div>
+                    `;
+                    reviewList.appendChild(div);
+                });
+            }
+        }
+
+        function toggleReview() {
+            const container = document.getElementById('review-container');
+            container.classList.toggle('hidden');
+            // smooth scroll to review
+            if(!container.classList.contains('hidden')) {
+                container.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+    </script>
+</body>
+</html>
